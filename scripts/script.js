@@ -1,3 +1,28 @@
+/*
+    This function removes display none class from all elemnts of node list.
+*/
+const RemoveNoneDisplay = (nodeList) => {
+    
+    nodeList.forEach(element => {
+        element.classList.remove('display-none');
+    })
+
+    const SubmitBtn = document.getElementById('submit-button');
+
+    SubmitBtn.classList.add('submit-button-error');
+
+}
+
+/*
+    This function displays error on screen.
+*/
+const DisplayError = (inputElement, errorMessage) => {
+
+    inputElement.previousElementSibling.classList.add('error-state-txt');
+    inputElement.nextElementSibling.innerHTML = `${errorMessage}`;
+    inputElement.classList.add('error-state');
+
+}
 
 /*
     This function checks whether the year is a leap year or not.
@@ -10,6 +35,107 @@ const LeapYear = (year) => {
     } else {
         return false;
     }
+
+}
+
+/*
+    This function validates the form.
+*/
+const Validate = () => {
+
+    // Array of months with 30 days.
+    const MonthsWith30Days = [4, 6, 9, 11];
+
+    let returnValue = true;
+
+    // Getting all input fields
+    const InputFields = document.querySelectorAll('.DOB');
+
+    // Getting all elements which will show error message.
+    const ErrorElements = document.querySelectorAll('.error-msg');
+
+    // Reset all previous error messages.
+    ErrorElements.forEach(element => {
+
+        element.classList.add('display-none');
+
+    })
+
+    InputFields.forEach(inputElement => {
+
+        inputElement.previousElementSibling.classList.remove('error-state-txt');
+        inputElement.nextElementSibling.innerHTML = `&nbsp;`;
+        inputElement.classList.remove('error-state');
+
+    })
+
+    // Current Date.
+    const CurrentDate = new Date();
+
+    // Display error if user enters wrong date.
+    InputFields.forEach(field => {
+
+        if (field.value === '') {
+
+            DisplayError(field, 'This field is required');
+            RemoveNoneDisplay(ErrorElements);
+
+            returnValue = false;
+
+        } else if (field.classList.contains('year') && parseInt(field.value) > CurrentDate.getFullYear()) {
+
+            DisplayError(field, 'Must be in the past');
+            RemoveNoneDisplay(ErrorElements);
+
+            returnValue = false;
+
+        } else if (field.classList.contains('year') && parseInt(field.value) < 1700) {
+
+            DisplayError(field, 'Must be a valid year');
+            RemoveNoneDisplay(ErrorElements);
+
+            returnValue = false;
+
+        } else if (field.classList.contains('day') && (parseInt(field.value) > 31) || parseInt(field.value) < 1) {
+
+            DisplayError(field, 'Must be a valid day');
+            RemoveNoneDisplay(ErrorElements);
+
+            returnValue = false;
+
+        } else if (field.classList.contains('day') && MonthsWith30Days.includes(parseInt(InputFields[1].value)) && parseInt(field.value) > 30) {
+
+            DisplayError(field, 'Must be a valid day');
+            RemoveNoneDisplay(ErrorElements);
+
+            returnValue = false;
+
+        } else if (field.classList.contains('day') && (parseInt(field.value) > 29) && parseInt(InputFields[1].value) === 2 && LeapYear(parseInt(InputFields[2].value))) {
+
+            DisplayError(field, 'Must be a valid day');
+            RemoveNoneDisplay(ErrorElements);
+
+            returnValue = false;
+
+        } else if (field.classList.contains('day') && (parseInt(field.value) > 28) && parseInt(InputFields[1].value) === 2 && !LeapYear(parseInt(InputFields[2].value))) {
+
+            DisplayError(field, 'Must be a valid day');
+            RemoveNoneDisplay(ErrorElements);
+
+            returnValue = false;
+
+        } else if (field.classList.contains('month') && (parseInt(field.value) > 12) || parseInt(field.value) < 1) {
+
+            DisplayError(field, 'Must be a valid month');
+            RemoveNoneDisplay(ErrorElements);
+
+            returnValue = false;
+
+        }
+
+    })
+    
+    return returnValue;
 
 }
 
@@ -90,9 +216,9 @@ const ShowOuput = () => {
     const age = CalculateAge(`${BYear}-${BMonth}-${BDate}`);
 
     // Getting output fields.
-    const OYears = document.querySelector('.year');
-    const OMonths = document.querySelector('.month');
-    const ODays = document.querySelector('.day');
+    const OYears = document.querySelector('.o-year');
+    const OMonths = document.querySelector('.o-month');
+    const ODays = document.querySelector('.o-day');
 
     // Updating the values of output fields to the desired output.
     OYears.textContent = age[0];
