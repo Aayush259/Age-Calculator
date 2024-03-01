@@ -54,6 +54,10 @@ const Validate = () => {
     // Getting all elements which will show error message.
     const ErrorElements = document.querySelectorAll('.error-msg');
 
+    // Reset the default position of submit button.
+    const SubmitBtn = document.getElementById('submit-button');
+    SubmitBtn.classList.remove('submit-button-error');
+
     // Reset all previous error messages.
     ErrorElements.forEach(element => {
 
