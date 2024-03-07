@@ -135,6 +135,13 @@ const Validate = () => {
 
             returnValue = false;
 
+        } else if (isNaN(parseInt(field.value))) {
+
+            DisplayError(field, 'Must be a valid value');
+            RemoveNoneDisplay(ErrorElements);
+
+            returnValue = false;
+
         }
 
     })
